@@ -2,6 +2,7 @@
         <head>
         <title>cmsite</title>
         <meta charset="utf-8">
+<meta property="head" content="H2">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700,900" rel="stylesheet">
         <link rel="stylesheet" href="./../cmsimde/static/chimper/fonts/icomoon/style.css">
@@ -95,6 +96,7 @@ img.add_border {
 </head>
 <body>
 <div class='container'><nav>
+        
     <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -140,4 +142,115 @@ img.add_border {
           </div>
           
         </header>
-    </nav><section><h1>SMap</h1><div id="tipue_search_content"></div><ul><li><a href='About.html'>About</a><li><a href='work.html'>work</a><ul><li><a href='ROC.html'>ROC</a><li><a href='USA.html'>USA</a><li><a href='JAPAN.html'>JAPAN</a><li><a href='UK.html'>UK</a></li></ul><li><a href='Brython.html'>Brython</a></li></ul></section></div></body></html>
+    <div id="tipue_search_content">USA << <a href='USA.html'>Previous</a> <a href='UK.html'>Next</a> >> UK<br /><h1>JAPAN</h1>
+<pre class="brush:cpp;auto-links:false;toolbar:false" contenteditable="false">#include &lt;stdio.h&gt;
+#include &lt;gd.h&gt;
+#include &lt;math.h&gt;
+
+void draw_japan_flag(gdImagePtr img);
+void draw_red_sun(gdImagePtr img, int x, int y, int size, int color);
+
+int main() {
+    int originalWidth = 1200;
+    int originalHeight = (int)(originalWidth * 2.0 / 3.0);
+    gdImagePtr img = gdImageCreateTrueColor(originalWidth, originalHeight);
+    gdImageAlphaBlending(img, 0);
+
+    draw_japan_flag(img);
+
+    // 新的宽度和高度以适应 "images" 文件夹
+    int newWidth = 600;
+    int newHeight = (int)(newWidth * 2.0 / 3.0);
+
+    // 创建新图像并进行缩放
+    gdImagePtr resizedImage = gdImageCreateTrueColor(newWidth, newHeight);
+    gdImageAlphaBlending(resizedImage, 0);
+    gdImageCopyResampled(resizedImage, img, 0, 0, 0, 0, newWidth, newHeight, originalWidth, originalHeight);
+
+  FILE *outputFile = fopen("./../images/japan_flag.png", "wb");
+    if (outputFile == NULL) {
+        fprintf(stderr, "Error opening the output file.\n");
+        return 1;
+    }
+    gdImagePng(resizedImage, outputFile);
+    fclose(outputFile);
+    gdImageDestroy(img);
+    gdImageDestroy(resizedImage);
+
+    return 0;
+}
+
+void draw_japan_flag(gdImagePtr img) {
+    int width = gdImageSX(img);
+    int height = gdImageSY(img);
+
+    // 创建一个白色背景
+    int white = gdImageColorAllocate(img, 255, 255, 255);
+    gdImageFilledRectangle(img, 0, 0, width - 1, height - 1, white);
+
+    // 绘制红色圆圈（太阳）
+    int red = gdImageColorAllocate(img, 255, 0, 0);
+    int center_x = width / 2;
+    int center_y = height / 2;
+    int radius = (int)((width * 2) / 3);
+    draw_red_sun(img, center_x, center_y, radius, red);
+}
+
+void draw_red_sun(gdImagePtr img, int x, int y, int size, int color) {
+  // 減小 size 的值,例如將他的值減半
+  size = size / 2;
+    gdImageArc(img, x, y, size, size, 0, 360, color);
+    gdImageFillToBorder(img, x, y, color, color);
+}</pre>
+<p><img alt="" height="267" src="./../images/japan_flag.png" width="400."/></p>
+<br />USA << <a href='USA.html'>Previous</a> <a href='UK.html'>Next</a> >> UK</div>
+        
+    <!-- footer -->
+      <div class="container">
+        <div class="row pt-3 mx-auto">
+            <p>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
+            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+        </div>
+      </div>
+    <!-- for footer -->
+    
+        </div> <!-- for site wrap -->
+            <!-- <script src="../cmsimde/static/chimper/js/jquery-3.3.1.min.js"></script> -->
+            <script src="../cmsimde/static/chimper/js/jquery-migrate-3.0.1.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/jquery-ui.js"></script>
+            <script src="../cmsimde/static/chimper/js/popper.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/bootstrap.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/owl.carousel.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/jquery.stellar.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/jquery.countdown.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/jquery.magnific-popup.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/bootstrap-datepicker.min.js"></script>
+            <script src="../cmsimde/static/chimper/js/aos.js"></script>
+            <!--
+            <script src="../cmsimde/static/chimper/js/typed.js"></script>
+                    <script>
+                    var typed = new Typed('.typed-words', {
+                    strings: ["Web Apps"," WordPress"," Mobile Apps"],
+                    typeSpeed: 80,
+                    backSpeed: 80,
+                    backDelay: 4000,
+                    startDelay: 1000,
+                    loop: true,
+                    showCursor: true
+                    });
+                    </script>
+            -->
+            <script src="../cmsimde/static/chimper/js/main.js"></script>
+        
+<!-- 啟用 LaTeX equations 編輯 -->
+  <!-- <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\(', '\)']]}
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>-->
+    </body></html>
+        
