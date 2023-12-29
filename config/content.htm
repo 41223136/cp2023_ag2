@@ -171,12 +171,14 @@ int main() {
  
     return 0;
 }</pre>
-<p><img alt="" height="300" src="/images/hellogd2.png" width="400"/></p><h1>work</h1>
+<p><img alt="" height="300" src="/images/hellogd2.png" width="400"/></p>
+<h1>work</h1>
 <pre class="brush:cpp;auto-links:false;toolbar:false" contenteditable="false">#include &lt;stdio.h&gt;
 #include &lt;gd.h&gt;
 #include &lt;math.h&gt;</pre>
 <p>利用程式庫繪製各國國旗</p>
-<br/><br/>gd程式庫練習<h2>ROC</h2>
+<p><br/><br/>gd程式庫練習</p>
+<h2>ROC</h2>
 <pre class="brush:cpp;auto-links:false;toolbar:false" contenteditable="false">// https://en.wikipedia.org/wiki/Flag_of_the_Republic_of_China
 // 內政部國旗參考資料: https://www.moi.gov.tw/cp.aspx?n=10621
 // cc roc_flag_in_gd.c -lgd -lm to link with gd and math library
@@ -591,158 +593,7 @@ void draw_uk_flag(gdImagePtr img) {
     gdImageFilledRectangle(img, 0, center_y + 1.5 * cross_arm_width, width, center_y - 1.5 * cross_arm_width, red);
 }</pre>
 <p style="text-align: left;"><img alt="" height="200" src="/images/uk_flag.png" width="400"/></p>
-<h2>korea</h2>
-<pre class="brush:cpp;auto-links:false;toolbar:false" contenteditable="false">// https://en.wikipedia.org/wiki/Flag_of_South_Korea
-// https://en.wikipedia.org/wiki/Flag_of_South_Korea#/media/File:Flag_of_South_Korea_(construction_sheet).svg
-#include &lt;stdio.h&gt;
-#include &lt;gd.h&gt;
-#include &lt;math.h&gt;
-
-// Function prototype
-void draw_korean_flag(gdImagePtr img);
-
-// Declare the rotation function
-void rotatePoints(int x_orig, int y_orig, double rotation_ang, gdPoint *points, int num_points) {
-    int i;
-    double angle_rad = rotation_ang * M_PI / 180.0;
-
-    for (i = 0; i &lt; num_points; i++) {
-        int x = points[i].x - x_orig;
-        int y = points[i].y - y_orig;
-
-        points[i].x = x_orig + (int)(x * cos(angle_rad) - y * sin(angle_rad));
-        points[i].y = y_orig + (int)(x * sin(angle_rad) + y * cos(angle_rad));
-    }
-}
-
-int main() {
-    // width 3: height 2
-    int width = 1200;
-    // 國旗長寬比為 72:48 = 12:8 = 3:2
-    int height = (int)(width * 2.0 / 3.0);
-
-    gdImagePtr img = gdImageCreateTrueColor(width, height);
-    gdImageAlphaBlending(img, 0);
-
-    draw_korean_flag(img);
-
-    FILE *outputFile = fopen("korean_flag_in_gd_w15_step2.png", "wb");
-    if (outputFile == NULL) {
-        fprintf(stderr, "Error opening the output file.\n");
-        return 1;
-    }
-    gdImagePngEx(img, outputFile, 9);
-    fclose(outputFile);
-    gdImageDestroy(img);
-    return 0;
-}
-
-void draw_korean_flag(gdImagePtr img) {
-    int width = gdImageSX(img);
-    int height = gdImageSY(img);
-    int red, blue, black, grey, white;
-    // according to https://en.wikipedia.org/wiki/Flag_of_South_Korea#/media/File:Flag_of_South_Korea_(construction_sheet).svg
-    double scale = width/72;
-    int big_circle_dia = (int)24*scale;
-    int small_circle_dia = (int) big_circle_dia/2;
-    // left small circle rotated angle is rot_ang
-    double rot_ang = atan2(48.0, 72.0);
-    // rectangle rotated angle is rot_ang2;
-    double rot_ang2 = atan2(72.0, 48.0);
-    double degree = M_PI/180.0;
-    int center_x = (int)(width / 2);
-    int center_y = (int)(height / 2);
-    gdPoint points[4];
-    // for upper rectangle
-    int rect_lower_left_x = center_x - (int)6*scale;
-    int rect_lower_right_x = center_x + (int)6*scale;
-    int rect_upper_left_x = rect_lower_left_x;
-    int rect_upper_right_x = rect_lower_right_x;
-    int rect_lower_left_y = center_y - (int)18*scale;
-    int rect_lower_right_y = rect_lower_left_y;
-    int rect_upper_left_y = rect_lower_left_y - (int)8*scale;
-    int rect_upper_right_y = rect_upper_left_y;
-    // get points
-    points[0].x = rect_lower_left_x;
-    points[0].y = rect_lower_left_y;
-    points[1].x = rect_upper_left_x;
-    points[1].y = rect_upper_left_y;
-    points[2].x = rect_upper_right_x;
-    points[2].y = rect_upper_right_y;
-    points[3].x = rect_lower_right_x;
-    points[3].y = rect_lower_right_y;
-
-    printf("small_circle_dia is %d\n", small_circle_dia);
-    int left_center_x = center_x - (small_circle_dia/2)*cos(rot_ang);
-    printf("center_x is %d\n", center_x);
-    printf("atan2(48.0, 72.0) is %f\n", atan2(48.0, 72.0));
-    printf("left_center_x is %d\n", left_center_x);
-    int left_center_y = center_y - (small_circle_dia/2)*sin(rot_ang);
-    int right_center_x = center_x + (small_circle_dia/2)*cos(rot_ang);
-    int right_center_y = center_y + (small_circle_dia/2)*sin(rot_ang);
-
-    red = gdImageColorAllocate(img, 255, 0, 0);      // Red
-    blue = gdImageColorAllocate(img, 0, 0, 255);     // Blue
-    black = gdImageColorAllocate(img, 0, 0, 0);      // Black
-    grey = gdImageColorAllocate(img, 125, 125, 125); // grey
-    white = gdImageColorAllocate(img, 255, 255, 255); // white
-
-    gdImageFilledRectangle(img, 0, 0, width, height, white);
-    gdImageRectangle(img, 0, 0, width, height, black);
-    
-    // rectangle rotate to upper right
-    rotatePoints(center_x, center_y, rot_ang2/degree, points, 4);
-    gdImageFilledPolygon(img, points, 4, grey);
-    //printf("rot_ang/degree is %f\n", rot_ang2/degree);
-    // rectangle rotate to upper left
-    rotatePoints(center_x, center_y, -2*rot_ang2/degree, points, 4);
-    gdImageFilledPolygon(img, points, 4, grey);
-    // rectangle rotate to lower ritht
-    rotatePoints(center_x, center_y, - 2*rot_ang/degree, points, 4);
-    gdImageFilledPolygon(img, points, 4, grey);
-    // rectangle rotate to lower left
-    rotatePoints(center_x, center_y, -2*rot_ang2/degree, points, 4);
-    gdImageFilledPolygon(img, points, 4, grey);
-    // Draw upper rectagle four lines
-    /*
-    gdImageLine(img, rect_lower_left_x, rect_lower_left_y, rect_upper_left_x, rect_upper_left_y, grey);
-    gdImageLine(img, rect_lower_right_x, rect_lower_right_y, rect_upper_right_x, rect_upper_right_y, grey);
-    gdImageLine(img, rect_lower_left_x, rect_lower_left_y, rect_lower_right_x, rect_lower_right_y, grey);
-    gdImageLine(img, rect_upper_left_x, rect_upper_left_y, rect_upper_left_x, rect_upper_left_y, grey);
-    */
-    // Draw the big circle outline
-    int circle_radius = (int)(height * 2.0 / 5.0);
-    gdImageEllipse(img, center_x, center_y, big_circle_dia, big_circle_dia, black);
-    // left small circle
-    gdImageEllipse(img, left_center_x, left_center_y, small_circle_dia, small_circle_dia, red);
-    // right small circle
-    gdImageEllipse(img, right_center_x, right_center_y, small_circle_dia, small_circle_dia, blue);
-    gdImageFill(img, left_center_x, left_center_y, red); // Fill left small circle with red
-    gdImageFill(img, right_center_x, right_center_y - small_circle_dia/2-10, red);
-    gdImageFill(img, right_center_x, right_center_y, blue); // Fill right small circle with blue
-    gdImageFill(img, left_center_x, left_center_y + small_circle_dia/2+10, blue);
-    // 用白色蓋掉先前的大圓黑線
-    gdImageEllipse(img, center_x, center_y, big_circle_dia, big_circle_dia, white);
-    
-    // 接下來只要改變三個圓的邊框顏色, 並且利用 gdImageFill 對特定區域塗色
-    // 應該就可以完成韓國國旗中間的紅藍區域圖案
-
-    /*
-    // Draw the second circle outline
-    gdImageEllipse(img, center_x + circle_radius / 2, center_y, circle_radius * 2, circle_radius * 2, black);
-
-    // Flood fill the left area with red
-    gdImageFill(img, center_x - circle_radius + 1, center_y, red);
-
-    // Flood fill the right area with blue
-    gdImageFill(img, center_x + circle_radius + 1, center_y, blue);
-
-    // Flood fill the intersection area with yellow
-    gdImageFill(img, center_x, center_y, yellow);
-    */
-}
-</pre>
-<p><img alt="" height="267" src="/images/korean_flag_in_gd_w15_step2.png" width="400"/></p>
+<p></p>
 <h1>個人學習心得</h1>
 <p>41223107:剛開始上這門課時，還可以擔任去教同學的角色，但後來慢慢地越來越聽不懂，不懂老師說每周推幾次幾次究竟是甚麼，為甚麼學姊們都可以那麼多，還有一開始的ipv4跳到ipv6這之間我也是有聽沒有懂，於是我就鼓起勇氣去問學姊，但為我解決最多問題的還是老師，老師都會直接過來我電腦這邊親自操作給我看，一步一步的解釋原因，不會很敷衍地看一看就走人，也很感謝學姊都特別照顧我們，沒有架子，考試的內容大多也是課堂有講到的，還記得當時建立倉儲時的我手忙腳亂，進度落後，很擔心都跟不上，但看到很多同學都跟我差不多，稍微有起到安心的作用，<span>這門課也讓我學到很多我不知道的東。</span>希望能順利通過這門課。</p>
 <p>41223108:</p>
@@ -751,7 +602,8 @@ void draw_korean_flag(gdImagePtr img) {
 <p>41223136:123</p>
 <p>41223141:從剛開學時候的創建Replit/Github程式的帳號開始,我覺得這堂課必定是要用心且多練習的,如果只靠上課聆聽的話想要一次就上手是不可能的事情,因為這是我第一次接觸到寫程式,在之前的高職端沒有修過這門課,我覺得這門課設立的目的非常好,上課時就聽老師說,一個事情可以用人力來去檢視,但如果事情多到一百件甚至是一千件的時候,就沒有辦法靠人力來檢視,所以這就是我學習這門課的意義,教導我們如何善加利用程式來去提高工作的效率,除了可以節省時間更可以節省人力成本。從最基本的設定網路開始,剛開學的時候只會利用proxy來設定,不明白老師使用隨身碟的目的在哪,後來才知道隨身碟可以儲存資料,隨身碟一插就可以馬上開始工作,後來Replit公布免費使用只到今年,這對我們來說是一個非常不方便的事情,於是老師創了一個s1511來給我們使用,但是要將自己的倉儲轉為近端,就是IPV4轉為IPV6,學習C語言最重要的就是理解程式基本的語法,利用變數/運算符號以及迴圈來畫各國國旗,感謝老師的用心教學,上課的同時還會錄製自己的螢幕,好讓我下課要練習時遇到問題還可以看老師錄製的影片來解決問題。總結來說學習這門課的目的就在於讓我們電腦及網路來提升工作效率,感謝學校開的這堂課,讓以後出社會工作的我可以比其他工程師多一項技能。</p>
 <p>41223146:123</p>
-<p>41223152:這學期我上計算機這門課,我學到了如何進行網路設定,可以使電腦輕易連線,只需要帶隨身碟,裡面下載一些程式,就會有網路,而且速度超快,都不會跑不動,之後上課就開始學程式的應用,但我開始遇到了困難,就是我英文非常的不好,所以很多的英文單字都看不懂,學習的速度就比別人還慢,需要先去查單字的翻譯,才能了解程式的意思,在架設網站的部分我沒學習得很好,沒有跟上老師的腳步,只好利用放學空閒的時間去詢問其他會的同學,他們都很熱心的一步一步教導我,我才慢慢跟上腳步,在網站中設計國旗出來,一開始使用chatgpt得時候,都不知道要如何去問他,他給我的程式都非常的奇怪,後來才知道要一步一步地去問他,可能程式是錯的,就從錯誤中告訴chatgpt,他就會幫你修改,給你要的程式,之後就非常上手製作國旗的速度也變得非常快,還能去教其他同學,這學期就即將要結束了,希望能在最後做個統整,把這學期學的程式應用更加上手,希望下學期能學習到更多不一樣得程式設計,去增進自己。</p><h1>Brython</h1>
+<p>41223152:這學期我上計算機這門課,我學到了如何進行網路設定,可以使電腦輕易連線,只需要帶隨身碟,裡面下載一些程式,就會有網路,而且速度超快,都不會跑不動,之後上課就開始學程式的應用,但我開始遇到了困難,就是我英文非常的不好,所以很多的英文單字都看不懂,學習的速度就比別人還慢,需要先去查單字的翻譯,才能了解程式的意思,在架設網站的部分我沒學習得很好,沒有跟上老師的腳步,只好利用放學空閒的時間去詢問其他會的同學,他們都很熱心的一步一步教導我,我才慢慢跟上腳步,在網站中設計國旗出來,一開始使用chatgpt得時候,都不知道要如何去問他,他給我的程式都非常的奇怪,後來才知道要一步一步地去問他,可能程式是錯的,就從錯誤中告訴chatgpt,他就會幫你修改,給你要的程式,之後就非常上手製作國旗的速度也變得非常快,還能去教其他同學,這學期就即將要結束了,希望能在最後做個統整,把這學期學的程式應用更加上手,希望下學期能學習到更多不一樣得程式設計,去增進自己。</p>
+<h1>Brython</h1>
 <p><a href="https://en.wikipedia.org/wiki/Python_(programming_language)">https://en.wikipedia.org/wiki/Python_(programming_language)</a></p>
 <h4>Examples:</h4>
 <p style="padding-left: 30px;"><a href="https://gist.github.com/mdecycu/d9082d678096bd58378d6afe2c7fa05d">https://gist.github.com/mdecycu/d9082d678096bd58378d6afe2c7fa05d</a></p>
